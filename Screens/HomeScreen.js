@@ -1,23 +1,23 @@
-import {useNavigation} from '@react-navigation/core'
 import React, {useEffect} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {auth} from '../firebase'
 import {getAudioFileUri, getFileList} from "../Services/FileService";
 import {Audio} from 'expo-av';
+import {getAuth, signOut} from "firebase/auth"
 
-const HomeScreen = () => {
-    const navigation = useNavigation();
+
+const HomeScreen = ({navigation}) => {
+    const auth = getAuth();
+
     const [fileList, setFileList] = React.useState([]);
     const [sound, setSound] = React.useState(null);
 
     async function playSound(uri) {
         console.log('Loading Sound');
-        const {_sound} = await Audio.Sound.createAsync({uri: uri}, {shouldPlay: true});
-            // require(uri)
-        setSound(_sound);
+        const soundObj = await Audio.Sound.createAsync({uri: uri});
+        setSound(soundObj.sound);
 
         console.log('Playing Sound');
-        await _sound.playAsync();
+        await soundObj.sound.playAsync();
     }
 
     React.useEffect(() => {
@@ -29,6 +29,7 @@ const HomeScreen = () => {
             : undefined;
     }, [sound]);
 
+
     useEffect(() => {
         getFileList().then(fileList => {
             setFileList(fileList);
@@ -37,12 +38,9 @@ const HomeScreen = () => {
 
 
     const handleSignOut = () => {
-        auth
-            .signOut()
-            .then(() => {
-                navigation.replace("Login")
-            })
-            .catch(error => alert(error.message))
+        signOut(auth).then(r => {
+            navigation.navigate("Login")
+        }).catch(error => alert(error.message));
     }
 
     return (
@@ -60,7 +58,6 @@ const HomeScreen = () => {
                         key={element}
                         onPress={() => {
                             getAudioFileUri(element).then(uri => {
-                                debugger;
                                 playSound(uri);
                             })
                         }}
@@ -70,6 +67,14 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 )
             })}
+            <TouchableOpacity
+                onPress={() => {
+                    setSound(null);
+                }}
+                style={styles.button}
+            >
+                <Text style={styles.buttonText}>Stop</Text>
+            </TouchableOpacity>
         </View>
     )
 }
