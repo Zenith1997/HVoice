@@ -10,13 +10,16 @@ const HomeScreen = ({navigation}) => {
 
     const [fileList, setFileList] = React.useState([]);
     const [sound, setSound] = React.useState(null);
+    const [isPlaying, setIsPlaying] = React.useState(false);
 
     async function playSound(uri) {
+        setSound(null);
         console.log('Loading Sound');
         const soundObj = await Audio.Sound.createAsync({uri: uri});
         setSound(soundObj.sound);
 
         console.log('Playing Sound');
+        setIsPlaying(true);
         await soundObj.sound.playAsync();
     }
 
@@ -25,6 +28,7 @@ const HomeScreen = ({navigation}) => {
             ? () => {
                 console.log('Unloading Sound');
                 sound.unloadAsync();
+                setIsPlaying(false);
             }
             : undefined;
     }, [sound]);
@@ -36,11 +40,89 @@ const HomeScreen = ({navigation}) => {
         });
     }, []);
 
+    const Controls = () => (<>
+        <View style={{display: "flex", width: "25%", flexDirection: "row"}}>
+            <TouchableOpacity
+                onPress={() => {
+                    setIsPlaying(false);
+                    sound.setStatusAsync({
+                        shouldPlay: false
+                    });
+                }}
+                style={styles.button2}
+                disabled={!isPlaying}
+            >
+                <Text style={styles.buttonText}>Pause</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    setIsPlaying(true);
+                    sound.setStatusAsync({
+                        shouldPlay: true
+                    });
+                }}
+                style={styles.button2}
+                disabled={isPlaying}
+            >
+                <Text style={styles.buttonText}>Resume</Text>
+            </TouchableOpacity>
+        </View>
+        <View style={{display: "flex", width: "25%", flexDirection: "row"}}>
+            <TouchableOpacity
+                onPress={async () => {
+                    const position = await sound.getStatusAsync().then(r => {
+                        const temp = r.positionMillis - 5000;
+                        if (temp < 0) {
+                            return 0;
+                        } else {
+                            return temp;
+                        }
+                    });
+                    await sound.setStatusAsync({
+                        positionMillis: position,
+                    });
+                }}
+                style={styles.button2}
+            >
+                <Text style={styles.buttonText}>5s backward</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={async () => {
+                    const position = await sound.getStatusAsync().then(async (r) => {
+                        const temp = r.positionMillis + 5000;
+                        const duration = await sound.getStatusAsync().then(r => r.durationMillis);
+                        if (temp > duration) {
+                            return duration;
+                        } else {
+                            return temp;
+                        }
+                    });
+                    await sound.setStatusAsync({
+                        positionMillis: position,
+                    });
+                }}
+                style={styles.button2}
+            >
+                <Text style={styles.buttonText}>5s forward</Text>
+            </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+            onPress={() => {
+                setSound(null);
+            }}
+            style={styles.button}
+        >
+            <Text style={styles.buttonText}>Stop</Text>
+        </TouchableOpacity>
+    </>
+        );
 
     const handleSignOut = () => {
         signOut(auth).then(r => {
-            navigation.navigate("Login")
-        }).catch(error => alert(error.message));
+            navigation.navigate("Login");
+        }).catch(error => {
+            alert(error.message);
+        });
     }
 
     return (
@@ -67,19 +149,12 @@ const HomeScreen = ({navigation}) => {
                     </TouchableOpacity>
                 )
             })}
-            <TouchableOpacity
-                onPress={() => {
-                    setSound(null);
-                }}
-                style={styles.button}
-            >
-                <Text style={styles.buttonText}>Stop</Text>
-            </TouchableOpacity>
+            {sound ? <Controls /> : null}
         </View>
     )
 }
 
-export default HomeScreen
+export default HomeScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -93,6 +168,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#0782F9',
         width: '25%',
         padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 4,
+    },
+    button2: {
+        backgroundColor: '#0782F9',
+        width: '50%',
+        padding: 15,
+        paddingVertical: 5,
         borderRadius: 10,
         alignItems: 'center',
         marginTop: 4,
