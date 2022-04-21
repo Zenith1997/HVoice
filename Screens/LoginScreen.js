@@ -1,42 +1,39 @@
-import { useNavigation } from '@react-navigation/core'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { auth } from '../firebase'
+import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged} from "firebase/auth";
 
-const LoginScreen = () => {
+
+const LoginScreen = ({navigation}) => {
+  const auth = getAuth();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [user, setUser] = React.useState(null);
 
-  const navigation = useNavigation()
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        navigation.replace("Home")
-      }
-    })
-
-    return unsubscribe
-  }, [])
+  onAuthStateChanged(auth, _user => {
+    console.log('onAuthStateChanged', _user);
+    setUser(_user);
+    if(_user){
+      navigation.navigate('Home');
+    }
+  });
 
   const handleSignUp = () => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Registered with:', user.email);
-      })
-      .catch(error => alert(error.message))
+    createUserWithEmailAndPassword(auth, email, password).then(userCredentials => {
+      const user = userCredentials.user;
+      console.log('Registered with:', user.email);
+    }).catch(e => {
+      alert(e.message)
+    });
   }
 
   const handleLogin = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Logged in with:', user.email);
-      })
-      .catch(error => alert(error.message))
+    signInWithEmailAndPassword(auth, email, password).then(userCredentials => {
+      const user = userCredentials.user;
+      console.log('Logged in with:', user.email);
+      navigation.navigate('Home');
+    }).catch(e => {
+      console.log(e)
+    });
   }
 
   return (
