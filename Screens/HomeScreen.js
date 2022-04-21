@@ -42,7 +42,9 @@ const HomeScreen = ({navigation}) => {
             navigation.navigate("Login")
         }).catch(error => alert(error.message));
     }
-
+  const handlePlayer=()=>{
+      navigation.navigate("Player")
+  }
     return (
         <View style={styles.container}>
 
@@ -53,12 +55,16 @@ const HomeScreen = ({navigation}) => {
                 <Text style={styles.buttonText}>Sign out</Text>
             </TouchableOpacity>
             {fileList.map(element => {
+             
+          
+             
                 return (
                     <TouchableOpacity
                         key={element}
                         onPress={() => {
                             getAudioFileUri(element).then(uri => {
                                 playSound(uri);
+                                console.log({uri});
                             })
                         }}
                         style={styles.button}
@@ -75,6 +81,12 @@ const HomeScreen = ({navigation}) => {
             >
                 <Text style={styles.buttonText}>Stop</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+            onPress={handlePlayer}
+            style={styles.button}
+        >
+            <Text style={styles.buttonText}>Player</Text>
+        </TouchableOpacity>
         </View>
     )
 }
