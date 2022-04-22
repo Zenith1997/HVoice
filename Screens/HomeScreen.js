@@ -55,9 +55,17 @@ const HomeScreen = ({navigation}) => {
       
         <View style={styles.container}>
        
-        
+            
+        <TouchableOpacity
+        onPress={handleSignOut}
+        style={styles.buttonSout}
+    >
+        <Text style={styles.buttonTextSout}>Sign out</Text>
+    </TouchableOpacity>
            
            <ScrollView 
+           decelerationRate={0}
+          
            disableIntervalMomentum ={false}
            horizontal ={true}
            style = {styles.scrollView}>
@@ -80,6 +88,9 @@ const HomeScreen = ({navigation}) => {
         })}
             
            </ScrollView>
+   
+          
+          
            
            
             {sound ? <>
@@ -179,12 +190,18 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     }, 
-     buttonl: {
+     buttonSout: {
+         display:"flex",
         backgroundColor: '#0782F9',
-        height:'10%',
-        padding: 30,
+        height:'5%',
+        padding: 10,
         borderRadius: 10,
-        width:"50%"
+        width:"40%",
+        marginBottom:0,
+        marginTop:40,
+        marginLeft:150,
+        justifyContent:"center",
+        alignItems:"center"
        
      
     },
@@ -196,8 +213,10 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
-        marginTop:60,
-        marginRight:30
+        marginTop:50,
+        marginRight:30,
+        marginLeft:30
+
 
     },
     button1: {
@@ -231,7 +250,15 @@ const styles = StyleSheet.create({
         paddingTop:50,
         color: 'white',
         fontWeight: '700',
-        fontSize: 16,
+        fontSize: 20,
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    buttonTextSout: {
+        
+        color: 'white',
+        fontWeight: '100',
+        fontSize: 20,
         justifyContent:"center",
         alignItems:"center"
     },
