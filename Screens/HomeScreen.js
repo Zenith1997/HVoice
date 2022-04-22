@@ -54,15 +54,8 @@ const HomeScreen = ({navigation}) => {
     return (
       
         <View style={styles.container}>
-        <SafeAreaView style = {{alignItems:"center",justifyContent:"center"}}>
-         <TouchableOpacity
-                onPress={handleSignOut}
-                style={styles.buttonl}
-            >
-                <Text style={styles.buttonText}>Sign out</Text>
-            </TouchableOpacity>
-
-        </SafeAreaView>
+       
+        
            
            <ScrollView 
            disableIntervalMomentum ={false}
@@ -85,8 +78,9 @@ const HomeScreen = ({navigation}) => {
                 
             )
         })}
-
+            
            </ScrollView>
+           
            
             {sound ? <>
                 <View style= {styles.controller}>
@@ -187,9 +181,10 @@ const styles = StyleSheet.create({
     }, 
      buttonl: {
         backgroundColor: '#0782F9',
-        height:'20%',
-        padding: 3,
+        height:'10%',
+        padding: 30,
         borderRadius: 10,
+        width:"50%"
        
      
     },
@@ -198,10 +193,12 @@ const styles = StyleSheet.create({
         
         height:'70%',
         width:350,
-        padding: 3,
+        padding: 20,
         borderRadius: 10,
         alignItems: 'center',
-        marginTop:0
+        marginTop:60,
+        marginRight:30
+
     },
     button1: {
         backgroundColor: '#0782F9',
@@ -231,7 +228,7 @@ const styles = StyleSheet.create({
     },
     
     buttonText: {
-    
+        paddingTop:50,
         color: 'white',
         fontWeight: '700',
         fontSize: 16,
@@ -240,7 +237,9 @@ const styles = StyleSheet.create({
     },
     scrollView:{
         width:'90%',
-        height:'40%',
+        height:'70%',
+        
+       
         
 
     },
