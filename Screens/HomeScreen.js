@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {getAudioFileUri, getFileList} from "../Services/FileService";
 import {Audio} from 'expo-av';
 import {getAuth, signOut} from "firebase/auth"
+import { ScrollView } from 'react-native';
 
 
 const HomeScreen = ({navigation}) => {
@@ -40,7 +41,50 @@ const HomeScreen = ({navigation}) => {
         });
     }, []);
 
-    const Controls = () => (<>
+
+    const handleSignOut = () => {
+        signOut(auth).then(r => {
+            navigation.navigate("Login");
+        }).catch(error => {
+            alert(error.message);
+        });
+    }
+
+    return (
+        <View style={styles.container}>
+          
+           
+            <TouchableOpacity
+                onPress={handleSignOut}
+                style={styles.buttonSout}
+            >
+                <Text style={styles.buttonText}>Sign out</Text>
+            </TouchableOpacity>
+            <ScrollView 
+            styles = {styles.scrollView}
+            horizontal ={true}>
+            {fileList.map(element => {
+                return (
+                    <TouchableOpacity
+                        key={element}
+                        onPress={() => {
+                            getAudioFileUri(element).then(uri => {
+                                playSound(uri);
+                            })
+                        }}
+                        style={styles.button}
+                    >
+                        <Text style={styles.buttonText}>{element}</Text>
+                    </TouchableOpacity>
+                    
+                )
+            })}</ScrollView>
+            {sound ?
+                
+                
+                
+                
+                <><View styles = {styles.controller}>
         <View style={{display: "flex", width: "25%", flexDirection: "row"}}>
             <TouchableOpacity
                 onPress={() => {
@@ -113,43 +157,8 @@ const HomeScreen = ({navigation}) => {
             style={styles.button}
         >
             <Text style={styles.buttonText}>Stop</Text>
-        </TouchableOpacity>
-    </>
-        );
-
-    const handleSignOut = () => {
-        signOut(auth).then(r => {
-            navigation.navigate("Login");
-        }).catch(error => {
-            alert(error.message);
-        });
-    }
-
-    return (
-        <View style={styles.container}>
-
-            <TouchableOpacity
-                onPress={handleSignOut}
-                style={styles.button}
-            >
-                <Text style={styles.buttonText}>Sign out</Text>
-            </TouchableOpacity>
-            {fileList.map(element => {
-                return (
-                    <TouchableOpacity
-                        key={element}
-                        onPress={() => {
-                            getAudioFileUri(element).then(uri => {
-                                playSound(uri);
-                            })
-                        }}
-                        style={styles.button}
-                    >
-                        <Text style={styles.buttonText}>{element}</Text>
-                    </TouchableOpacity>
-                )
-            })}
-            {sound ? <Controls /> : null}
+        </TouchableOpacity></View>
+    </> : null}
         </View>
     )
 }
@@ -164,13 +173,31 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-    button: {
+    container: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height:"100%"
+    },
+    buttonSout: {
         backgroundColor: '#0782F9',
         width: '25%',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
         marginTop: 4,
+        height:"10%"
+    },
+    button: {
+        backgroundColor: '#0782F9',
+        width: '20%',
+        padding: 5,
+        borderRadius: 10,
+        alignItems: 'center',
+        margin: 10,
+        height:"50%"
     },
     button2: {
         backgroundColor: '#0782F9',
@@ -186,4 +213,9 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 16,
     },
+    scrollView: {
+        width:"100%",
+        marginVertical: 5,
+        display:"flex"
+      },
 })
