@@ -3,10 +3,11 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {getAudioFileUri, getFileList} from "../Services/FileService";
 import {Audio} from 'expo-av';
 import {getAuth, signOut} from "firebase/auth"
-import { ScrollView, SectionList } from 'react-native';
+import { ScrollView, Dimensions,SectionList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 
-
+const Width = Dimensions.get('window').width
 const HomeScreen = ({navigation}) => {
     const auth = getAuth();
 
@@ -50,9 +51,12 @@ const HomeScreen = ({navigation}) => {
             alert(error.message);
         });
     }
-
+    
+    
     return (
-      
+
+    
+       
         <View style={styles.container}>
        
             
@@ -64,9 +68,10 @@ const HomeScreen = ({navigation}) => {
     </TouchableOpacity>
            
            <ScrollView 
-           decelerationRate={0}
+           
+           pagingEnabled={true}
           
-           disableIntervalMomentum ={false}
+           
            horizontal ={true}
            style = {styles.scrollView}>
            {fileList.map(element => {
@@ -209,13 +214,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#0782F9',
         
         height:'70%',
-        width:350,
+        width:Width,
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
         marginTop:50,
-        marginRight:30,
-        marginLeft:30
+        marginRight:3,
+        marginLeft:3
 
 
     },
@@ -263,7 +268,7 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     scrollView:{
-        width:'90%',
+        width:'100%',
         height:'70%',
         
        
