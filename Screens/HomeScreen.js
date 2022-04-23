@@ -117,6 +117,7 @@ const HomeScreen = ({navigation}) => {
   
                 <TouchableOpacity
                     onPress={() => {
+                        handleScroll;
                         setIsPlaying(false);
                         sound.setStatusAsync({
                             shouldPlay: false
