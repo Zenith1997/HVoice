@@ -5,7 +5,7 @@ import {Audio} from 'expo-av';
 import {getAuth, signOut} from "firebase/auth"
 import { ScrollView, Dimensions,SectionList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
+import { useWindowDimensions } from 'react-native';
 
 const Width = Dimensions.get('window').width
 const HomeScreen = ({navigation}) => {
@@ -13,6 +13,7 @@ const HomeScreen = ({navigation}) => {
 
     const [fileList, setFileList] = React.useState([]);
     const [sound, setSound] = React.useState(null);
+    const [ssound, setSSound] = React.useState();
     const [isPlaying, setIsPlaying] = React.useState(false);
 
     async function playSound(uri) {
@@ -34,7 +35,7 @@ const HomeScreen = ({navigation}) => {
                 setIsPlaying(false);
             }
             : undefined;
-    }, [sound]);
+    }, [sound],[ssound]);
 
 
     useEffect(() => {
@@ -51,6 +52,17 @@ const HomeScreen = ({navigation}) => {
             alert(error.message);
         });
     }
+   
+    async function handleScroll() {
+        console.log('Loading Sound');
+        const { sound } = await Audio.Sound.createAsync(
+           require('../assets/sounds/drag.wav')
+        );
+        setSSound(ssound);
+    
+        console.log('Playing Sound');
+        await sound.playAsync(); }
+  
     
     
     return (
@@ -68,6 +80,7 @@ const HomeScreen = ({navigation}) => {
     </TouchableOpacity>
            
            <ScrollView 
+           onScroll ={handleScroll}
            
            pagingEnabled={true}
           
