@@ -80,7 +80,7 @@ const HomeScreen = ({navigation}) => {
     </TouchableOpacity>
            
            <ScrollView 
-           onScroll ={handleScroll}
+           onScrollBeginDrag ={handleScroll}
            
            pagingEnabled={true}
           
@@ -138,9 +138,13 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
+                        
                         setIsPlaying(true);
+                      
                         sound.setStatusAsync({
                             shouldPlay: true
+                            
+                            
                         });
                     }}
                     style={styles.button2}
