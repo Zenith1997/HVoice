@@ -4,6 +4,7 @@
     "slug": "FirebaseAuth",
     "version": "1.0.0",
     "orientation": "portrait",
+    "permissions":[],
     "icon": "./assets/iconapp.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -23,12 +24,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.zenith_97.FirebaseAuth"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "package":"com.leo.FirebaseAuth"
-  },
-  "versionCode":1
+    }
+  }
 }

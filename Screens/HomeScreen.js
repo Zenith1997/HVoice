@@ -54,14 +54,23 @@ const HomeScreen = ({navigation}) => {
     }
    
     async function handleScroll() {
-        console.log('Loading Sound');
-        const { sound } = await Audio.Sound.createAsync(
-           require('../assets/sounds/drag.wav')
-        );
-        setSSound(ssound);
-    
-        console.log('Playing Sound');
-        await sound.playAsync(); }
+        return new Promise(async (resolve,reject)=>{
+            console.log('Loading Sound');
+            try{
+
+            }catch(e){
+                reject(e);
+            }
+            const { sound } = await Audio.Sound.createAsync(
+               require('../assets/sounds/drag.wav')
+            );
+            setSSound(ssound);
+        
+            console.log('Playing Sound');
+            await sound.playAsync(); 
+            resolve()
+          
+        });}
   
     
     
@@ -117,9 +126,11 @@ const HomeScreen = ({navigation}) => {
   
                 <TouchableOpacity
                     onPress={() => {
-                        handleScroll;
+                
+                        handleScroll();
                         setIsPlaying(false);
                         sound.setStatusAsync({
+                            
                             shouldPlay: false
                         });
                     }}
@@ -130,7 +141,9 @@ const HomeScreen = ({navigation}) => {
                 </TouchableOpacity>
                    <TouchableOpacity
                 onPress={() => {
+                    
                     setSound(null);
+                    handleScroll();
                 }}
                 style={styles.button1}
             >
@@ -138,14 +151,16 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
+                       
                         
                         setIsPlaying(true);
                       
                         sound.setStatusAsync({
                             shouldPlay: true
-                            
+                          
                             
                         });
+                     handleScroll();
                     }}
                     style={styles.button2}
                     disabled={isPlaying}
@@ -156,6 +171,7 @@ const HomeScreen = ({navigation}) => {
             <View  style={{display: "flex", width: "50%", flexDirection: "row",height:"50%"}}>
                 <TouchableOpacity
                     onPress={async () => {
+                        await handleScroll();
                         const position = await sound.getStatusAsync().then(r => {
                             const temp = r.positionMillis - 5000;
                             if (temp < 0) {
@@ -174,6 +190,7 @@ const HomeScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={async () => {
+                        await handleScroll();
                         const position = await sound.getStatusAsync().then(async (r) => {
                             const temp = r.positionMillis + 5000;
                             const duration = await sound.getStatusAsync().then(r => r.durationMillis);
@@ -237,7 +254,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         marginTop:50,
-        marginRight:3,
+        marginRight:0,
         marginLeft:3
 
 
@@ -246,7 +263,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#0782F9',
         width: '100%',
         height:'100%',
-        padding: 30,
+        padding: 20,
         borderRadius: 10,
         alignItems: 'center',
         marginTop: 4,
