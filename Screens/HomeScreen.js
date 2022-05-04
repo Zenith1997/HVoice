@@ -61,17 +61,30 @@ const HomeScreen = ({navigation}) => {
         setSSound(ssound);
     
         console.log('Playing Sound');
-        await sound.playAsync(); }
-  
+        await sound.playAsync();
+    }
+
+    async function handleStop() {
+        const { sound } = await Audio.Sound.createAsync(
+           require('../assets/sounds/pause.mp3')
+        );
+        setSSound(ssound);
+    
+        await sound.playAsync();
+    }
+
+    async function handleContinue(){
+        const { sound } = await Audio.Sound.createAsync(
+           require('../assets/sounds/continue.mp3')
+        );
+        setSSound(ssound);
+    
+        await sound.playAsync();
+    }
     
     
     return (
-
-    
-       
         <View style={styles.container}>
-       
-            
         <TouchableOpacity
         onPress={handleSignOut}
         style={styles.buttonSout}
@@ -99,18 +112,12 @@ const HomeScreen = ({navigation}) => {
                     style={styles.button}
                 >
                 <Text style={styles.buttonText}>{element}</Text>
-                </TouchableOpacity>
-            
-                
+                </TouchableOpacity>             
             )
         })}
             
            </ScrollView>
    
-          
-          
-           
-           
             {sound ? <>
                 <View style= {styles.controller}>
                 <View style={{display: "flex", width: "35%", flexDirection: "row",height:"50%"}}>
@@ -118,6 +125,7 @@ const HomeScreen = ({navigation}) => {
                 <TouchableOpacity
                     onPress={() => {
                         setIsPlaying(false);
+                        handleContinue();
                         sound.setStatusAsync({
                             shouldPlay: false
                         });
@@ -130,6 +138,7 @@ const HomeScreen = ({navigation}) => {
                    <TouchableOpacity
                 onPress={() => {
                     setSound(null);
+                    handleStop();
                 }}
                 style={styles.button1}
             >
@@ -137,10 +146,11 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        setIsPlaying(true);
+                        setIsPlaying(true);// handlePause() => {....} 
                         sound.setStatusAsync({
                             shouldPlay: true
                         });
+                        handleContinue();
                     }}
                     style={styles.button2}
                     disabled={isPlaying}
@@ -187,13 +197,8 @@ const HomeScreen = ({navigation}) => {
                     <Text style={styles.buttonText}>5s forward</Text>
                 </TouchableOpacity>
             </View>
-         
-              
                 </View>
-                
-                
                 </> : null}
-               
         </View>
     )
 }
