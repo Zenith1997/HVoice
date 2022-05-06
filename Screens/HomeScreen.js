@@ -81,6 +81,15 @@ const HomeScreen = ({navigation}) => {
     
         await sound.playAsync();
     }
+
+    async function handleForward(){
+        const { sound } = await Audio.Sound.createAsync(
+           require('../assets/sounds/fastForward.mp3')
+        );
+        setSSound(ssound);
+    
+        await sound.playAsync();
+    }
     
     
     return (
@@ -161,6 +170,7 @@ const HomeScreen = ({navigation}) => {
             <View  style={{display: "flex", width: "50%", flexDirection: "row",height:"50%"}}>
                 <TouchableOpacity
                     onPress={async () => {
+                        await handleForward();
                         const position = await sound.getStatusAsync().then(r => {
                             const temp = r.positionMillis - 5000;
                             if (temp < 0) {
@@ -179,9 +189,12 @@ const HomeScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={async () => {
+                        handleForward();
                         const position = await sound.getStatusAsync().then(async (r) => {
                             const temp = r.positionMillis + 5000;
+                            
                             const duration = await sound.getStatusAsync().then(r => r.durationMillis);
+                            
                             if (temp > duration) {
                                 return duration;
                             } else {
